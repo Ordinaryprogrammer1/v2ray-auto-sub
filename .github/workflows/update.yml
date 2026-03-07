@@ -1,0 +1,32 @@
+name: Update subscription
+
+on:
+  schedule:
+    - cron: "0 */5 * * *"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.14"
+
+      - name: Install requests
+        run: pip install requests
+
+      - name: Generate subscription
+        run: python generate.py
+
+      - name: Commit files
+        run: |
+          git config --global user.name "bot"
+          git config --global user.email "bot@github.com"
+          git add .
+          git commit -m "update sub" || exit 0
+          git push
