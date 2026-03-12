@@ -29,4 +29,5 @@ encoded_string = base64.b64encode(base64_url.encode('utf-8')).decode('utf-8')
 
 # Сохраняем в файл
 with open('vless_links.txt', 'w', encoding='utf-8') as f:
-    f.write('\n'.join(encoded_string))
+    #f.write('\n'.(encoded_string))
+    f.write(encoded_string)
