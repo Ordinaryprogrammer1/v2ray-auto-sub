@@ -1,4 +1,5 @@
 import requests
+import base64
 
 headers = {'User-Agent': 'Mozilla/5.0'}
 
@@ -21,6 +22,11 @@ print(f"Найдено ссылок: {len(all_url)}")
 for line in all_url:
     print(line)
 
+base64_url = '\n'.join(all_url)
+#bytes_data = base64_url.encode('utf-8')
+#encoded_bytes = base64.b64encode(bytes_data)
+encoded_string = base64.b64encode(base64_url.encode('utf-8')).decode('utf-8')
+
 # Сохраняем в файл
 with open('vless_links.txt', 'w', encoding='utf-8') as f:
-    f.write('\n'.join(all_url))
+    f.write('\n'.join(encoded_string))
