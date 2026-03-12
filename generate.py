@@ -1,33 +1,43 @@
 import requests
-import base64
 
-sources = open("sources.txt").read().splitlines()
+with open("sources.json", "r", encoding="utf-8") as f:
+    sources = [line.strip() for line in f if line.strip() and not line.startswith("#")]
 
-nodes = []
 
-for url in sources:
-    try:
-        r = requests.get(url, timeout=20)
-        text = r.text
+#raw_url = "https://github.com/igareck/vpn-configs-for-russia/raw/main/WHITE-SNI-RU-all.txt"
 
-        try:
-            text = base64.b64decode(text).decode()
-        except:
-            pass
+headers = {'User-Agent': 'Mozilla/5.0'}
 
-        for line in text.splitlines():
-            if line.startswith(("vless://","vmess://","trojan://","ss://")):
-                nodes.append(line.strip())
+source = ["https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/WHITE-SNI-RU-all.txt", 
+          "https://raw.githubusercontent.com/igareck/vpn-configs-for-russia/main/WHITE-CIDR-RU-checked.txt"]
 
-    except:
-        pass
+#for line in source:
+#    response = requests.get(line, headers=headers)
+#    response.encoding = 'utf-8'
+#    print("успех")
 
-nodes = list(set(nodes))
+all_url = []
 
-with open("sub.txt","w") as f:
-    f.write("\n".join(nodes))
+for url in source:
+    response = requests.get(url, headers=headers)
+    response.encoding = 'utf-8'
+    print(f"Успех: {url.split('/')[-1]}")
+    
+    # Извлекаем строки из текущего ответа и добавляем в общий список
+    for text_line in response.text.splitlines():
+        if text_line.startswith(('vless://', 'trojan://')):
+            all_url.append(text_line)
 
-encoded = base64.b64encode("\n".join(nodes).encode()).decode()
+# Извлекаем строки, начинающиеся с vless:// или trojan://
+#links = []
+#for line in response.text.splitlines():
+#    if line.startswith(('vless://', 'trojan://')):
+#        links.append(line)
 
-with open("sub_base64.txt","w") as f:
-    f.write(encoded)
+print(f"Найдено ссылок: {len(all_url)}")
+for line in all_url:
+    print(line)
+
+# Сохраняем в файл
+with open('vless_links.txt', 'w', encoding='utf-8') as f:
+    f.write('\n'.join(all_url))
