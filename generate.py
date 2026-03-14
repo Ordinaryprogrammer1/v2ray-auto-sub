@@ -28,6 +28,8 @@ base64_url = '\n'.join(all_url)
 encoded_string = base64.b64encode(base64_url.encode('utf-8')).decode('utf-8')
 
 # Сохраняем в файл
-with open('vless_links.txt', 'w', encoding='utf-8') as f:
+with open('links_base64.txt', 'w', encoding='utf-8') as f:
     #f.write('\n'.(encoded_string))
     f.write(encoded_string)
+with open('links_standart', 'w', encoding='utf-8') as f:
+    f.write('\n'.join(all_url))

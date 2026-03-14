@@ -29,4 +29,3 @@ jobs:
           git config --global user.email "bot@github.com"
           git add .
           git commit -m "update sub" || exit 0
-          git push
